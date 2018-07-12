@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">HCBCounter</string>
+    <string name="txtInn">0</string>
+    <string name="txtOut">0</string>
+    <string name="txtTotal">0</string>
+    <string name="txtHora">00:00:00</string>
+    <string name="btnInn">Inn</string>
+    <string name="btnOut">OUT</string>
+    <string name="btnReset">RESET</string>
+    <string name="btnMostrarDades">Enviar</string>
+    <string name="btnReturn">Return</string>
+    <string name="btnEnviar">Enviar</string>
+    <string name="txtCorreu">Correu:</string>
+    <string name="edCorreu">dotero@happycustomerbox.com</string>
+    <string name="sumatori">Incremente/Decrementa</string>
+    <string name="MenuShowSumatori">Inc/Dec</string>
+</resources>
