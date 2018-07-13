@@ -3,6 +3,7 @@ package happycustomerbox.happycounter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +23,8 @@ public class Resultats extends AppCompatActivity implements View.OnClickListener
 
     Button btnEnviar, btnReturn;
 
-    TextView txtTotal, txt1, txt2, txt3, txt4, txt5, txtPorta, txtH1, txtH2, txtH3, txtH4, txtH5, txtCorreu;
-    EditText edText;
+    TextView txtTotal, txt1, txt2, txt3, txt4, txt5, txtPorta, txtCorreu;
+    EditText email;
 
     Bundle b;
 
@@ -31,7 +32,6 @@ public class Resultats extends AppCompatActivity implements View.OnClickListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultats);
 
@@ -50,38 +50,72 @@ public class Resultats extends AppCompatActivity implements View.OnClickListener
         txt5 = findViewById(R.id.txt5);
         txtTotal = findViewById(R.id.txtMostrarTotal);
         txtPorta = findViewById(R.id.txtPorta);
-        txtH1 = findViewById(R.id.txtHora1);
-        txtH2 = findViewById(R.id.txtHora2);
-        txtH3 = findViewById(R.id.txtHora3);
-        txtH4 = findViewById(R.id.txtHora4);
-        txtH5 = findViewById(R.id.txtHora5);
 
         txtCorreu = findViewById(R.id.txtCorreu);
-        edText = findViewById(R.id.edCorreu);
+        email = findViewById(R.id.edCorreu);
 
         btnReturn.setOnClickListener(this);
         btnEnviar.setOnClickListener(this);
 
         b = getIntent().getExtras();
 
+        if(b.getString("email")!=null){
+            email.setText(b.getString("email"));
+        }
 
         txtPorta.setText(b.getString("Porta"));
         txtTotal.setText(b.getString("Total"));
 
-        txt1.setText(b.getString(""+b.getString("Total")));
-        txtH1.setText(b.getString("H:"+b.getString("Total")));
+        if((b.getString(b.getString("Total")))!=null){
+            txt1.setText(b.getString(b.getString("Total"))+" - "+
+                    b.getString("H:"+b.getString("Total")));
+            if(Integer.parseInt(b.getString(b.getString("Total")))==1){
+                txt1.setTextColor(Color.GREEN);
+            }else if(Integer.parseInt(b.getString(b.getString("Total")))==-1){
+                txt1.setTextColor(Color.RED);
+            }
+        }
 
-        txt2.setText(b.getString(""+(Integer.parseInt(b.getString("Total"))-1)));
-        txtH2.setText(b.getString("H:"+(Integer.parseInt(b.getString("Total"))-1)));
+        if(b.getString(""+(Integer.parseInt(b.getString("Total"))-1))!=null){
+            txt2.setText(b.getString(""+(Integer.parseInt(b.getString("Total"))-1))+" - "+
+                    b.getString("H:"+(Integer.parseInt(b.getString("Total"))-1)));
+            if(Integer.parseInt(b.getString(""+(Integer.parseInt(b.getString("Total"))-1)))==1){
+                txt2.setTextColor(Color.GREEN);
+            }else if(Integer.parseInt(b.getString(""+(Integer.parseInt(b.getString("Total"))-1)))==-1){
+                txt2.setTextColor(Color.RED);
+            }
+        }
 
-        txt3.setText(b.getString(""+(Integer.parseInt(b.getString("Total"))-2)));
-        txtH3.setText(b.getString("H:"+(Integer.parseInt(b.getString("Total"))-2)));
+        if(b.getString(""+(Integer.parseInt(b.getString("Total"))-2))!=null){
+            txt3.setText(b.getString(""+(Integer.parseInt(b.getString("Total"))-2))+" - "+
+                    b.getString("H:"+(Integer.parseInt(b.getString("Total"))-2)));
+            if(Integer.parseInt(b.getString(""+(Integer.parseInt(b.getString("Total"))-2)))==1){
+                txt3.setTextColor(Color.GREEN);
+            }else if(Integer.parseInt(b.getString(""+(Integer.parseInt(b.getString("Total"))-2)))==-1){
+                txt3.setTextColor(Color.RED);
+            }
+        }
 
-        txt4.setText(b.getString(""+(Integer.parseInt(b.getString("Total"))-3)));
-        txtH4.setText(b.getString("H:"+(Integer.parseInt(b.getString("Total"))-3)));
+        if(b.getString(""+(Integer.parseInt(b.getString("Total"))-3))!=null){
+            txt4.setText(b.getString(""+(Integer.parseInt(b.getString("Total"))-3))+" - "+
+                    b.getString("H:"+(Integer.parseInt(b.getString("Total"))-3)));
+            if(Integer.parseInt(b.getString(""+(Integer.parseInt(b.getString("Total"))-3)))==1){
+                txt4.setTextColor(Color.GREEN);
+            }else if(Integer.parseInt(b.getString(""+(Integer.parseInt(b.getString("Total"))-3)))==-1){
+                txt4.setTextColor(Color.RED);
+            }
+        }
 
-        txt5.setText(b.getString(""+(Integer.parseInt(b.getString("Total"))-4)));
-        txtH5.setText(b.getString("H:"+(Integer.parseInt(b.getString("Total"))-4)));
+        if(b.getString(""+(Integer.parseInt(b.getString("Total"))-4))!=null){
+            txt5.setText(b.getString(""+(Integer.parseInt(b.getString("Total"))-4))+" - "+
+                    b.getString("H:"+(Integer.parseInt(b.getString("Total"))-4)));
+            if(Integer.parseInt(b.getString(""+(Integer.parseInt(b.getString("Total"))-4)))==1){
+                txt5.setTextColor(Color.GREEN);
+            }else if(Integer.parseInt(b.getString(""+(Integer.parseInt(b.getString("Total"))-4)))==-1){
+                txt5.setTextColor(Color.RED);
+            }
+        }
+
     }
 
     @Override
@@ -121,7 +155,7 @@ public class Resultats extends AppCompatActivity implements View.OnClickListener
     }
 
     protected void sendEmail() {
-        String[] TO = {edText.getText().toString()}; //aquí pon tu correo
+        String[] TO = {email.getText().toString()}; //aquí pon tu correo
         String[] CC = {""};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setData(Uri.parse("mailto:"));

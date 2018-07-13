@@ -3,19 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/MenuSumatori"
-        android:title="@string/sumatori" />
+        android:id="@+id/MenuSetting"
+        android:title="@string/MenuSetting" />
 
     <item
-        android:id="@+id/MenuShowSumatori"
-        android:title="@string/MenuShowSumatori"
-        app:showAsAction="always" />
+    android:id="@+id/MenuIncrement"
+    android:title="@string/MenuIncrement" />
+
+    <item
+        android:id="@+id/MenuDecrement"
+        android:title="@string/MenuDecrement" />
+
 
     <item
         android:id="@+id/MenuReset"
-        android:title="@string/btnReset" />
+        android:title="@string/MenuReset" />
 
     <item
         android:id="@+id/MenuEnviar"
-        android:title="@string/btnEnviar" />
+        android:title="@string/MenuEnviar" />
+
+    <item
+        android:id="@+id/MenuEmail"
+        android:title="@string/MenuEmail" />
 </menu>

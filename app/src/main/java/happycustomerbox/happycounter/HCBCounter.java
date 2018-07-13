@@ -2,10 +2,9 @@ package happycustomerbox.happycounter;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,8 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class HCBCounter extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,24 +22,21 @@ public class HCBCounter extends AppCompatActivity implements View.OnClickListene
     Button btnMostrar, btnInn, btnOut, btnReset;
 
     int intInn, intOut, intIncrement, intDecrement;
-    boolean boolSumatori =true; //True = Increment, false=Decrement.
+    boolean boolSumatori =false; //True = Decrement, false=Increment.
 
     String strInn, strOut, strTotal, strHora;
-    EditText edtText;
+    EditText edEmail, edtText;
 
     Intent i;
     Bundle b;
 
-    ArrayList<Integer> pos;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_happy_counter);
 
         inicialitzar();
-        reset();
+        crono();
 
     }
 
@@ -58,8 +53,9 @@ public class HCBCounter extends AppCompatActivity implements View.OnClickListene
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch(item.getItemId()){
-            case R.id.MenuSumatori:
-                changeSumatori();
+            case R.id.MenuIncrement:
+                boolSumatori = false;
+                actualitzar();
                 break;
             case R.id.MenuReset:
                 alert();
@@ -67,33 +63,51 @@ public class HCBCounter extends AppCompatActivity implements View.OnClickListene
             case R.id.MenuEnviar:
                 enviar();
                 break;
-            case R.id.MenuShowSumatori:
-                changeSumatori();
+            case R.id.MenuDecrement:
+                boolSumatori = true;
+                actualitzar();
+                break;
+            case R.id.MenuSetting:
+                info();
+                break;
+            case R.id.MenuEmail:
+                email();
+
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
-    private void changeSumatori() {
-        if(boolSumatori){
-            boolSumatori = false;
-        }else{
-            boolSumatori = true;
-        }
-        sumatori();
+    private void email(){
+        final AlertDialog.Builder alertReset = new AlertDialog.Builder(this);
+        alertReset.setMessage("E-mail:");
+        // set prompts.xml to alertdialog builder
+        final EditText et = new EditText(this);
+        alertReset.setView(et);
+
+        // set dialog message
+        alertReset.setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                edEmail.setText(et.getText().toString());
+            }
+        });
+        // create alert dialog
+        AlertDialog alertDialog = alertReset.create();
+        // show it
+        alertDialog.show();
     }
+
 
     private void inicialitzar(){
         i = new Intent(this, Resultats.class);
         b = new Bundle();
 
-        txtHora = findViewById(R.id.txtHora);
         txtInn = findViewById(R.id.txtInn);
         txtOut = findViewById(R.id.txtOut);
         txtTotal = findViewById(R.id.txtTotal);
+        txtHora = findViewById(R.id.txtHora);
 
         edtText = findViewById(R.id.edtText);
+        edEmail = findViewById(R.id.edEmail);
 
         btnMostrar = findViewById(R.id.btnMostrarDades);
         btnInn = findViewById(R.id.btnInn);
@@ -105,6 +119,8 @@ public class HCBCounter extends AppCompatActivity implements View.OnClickListene
         btnInn.setOnClickListener(this);
         btnReset.setOnClickListener(this);
 
+
+
     }
 
     private void reset(){
@@ -114,9 +130,26 @@ public class HCBCounter extends AppCompatActivity implements View.OnClickListene
         intDecrement=0;
     }
 
+    private void info(){
+        final AlertDialog.Builder alertReset = new AlertDialog.Builder(this);
+        alertReset.setMessage("done by \nHappyCustomerBox SL\n" +
+                "Version: 1.2");
+        alertReset.setTitle("HCBCounter");
+        alertReset.setNegativeButton("Ok.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog dialog = alertReset.create();
+
+        dialog.show();
+    }
+
     private void alert(){
         final AlertDialog.Builder alertReset = new AlertDialog.Builder(this);
-        alertReset.setMessage("Esta seguro? Si acepta se perderan los datos.");
+        alertReset.setMessage("Are you sure?");
         alertReset.setTitle("RESET");
         alertReset.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
@@ -158,6 +191,7 @@ public class HCBCounter extends AppCompatActivity implements View.OnClickListene
         b.putString("Total",""+intIncrement);
         b.putString("TotalDec",""+intDecrement);
         b.putString("Porta",edtText.getText().toString());
+        b.putString("email",edEmail.getText().toString());
         i.putExtras(b);
         startActivityForResult(i,0);
     }
@@ -167,11 +201,9 @@ public class HCBCounter extends AppCompatActivity implements View.OnClickListene
         intIncrement++;
         intDecrement=intInn-intOut;
         txtOut.setText(strOut=""+(intOut));
-        txtTotal.setText(strTotal=""+(intIncrement));
-        txtHora.setText(strHora = ""+(new Date().toString()));
-
-        b.putString(strTotal,"-1");
-        b.putString("H:"+strTotal,strHora);
+        actualitzar();
+        b.putString(""+intIncrement,"-1");
+        b.putString("H:"+intIncrement,strHora);
     }
 
     private void inn() {
@@ -179,18 +211,67 @@ public class HCBCounter extends AppCompatActivity implements View.OnClickListene
         intIncrement++;
         intDecrement=intInn-intOut;
         txtInn.setText(strInn=""+(intInn));
-        txtTotal.setText(strTotal=""+(intIncrement));
-        txtHora.setText(strHora = ""+(new Date().toString()));
-
-        b.putString(strTotal,"1");
-        b.putString("H:"+strTotal,strHora);
+        actualitzar();
+        b.putString(""+intIncrement,"1");
+        b.putString("H:"+intIncrement,strHora);
     }
 
-    private void sumatori(){
+    //Guardar estado, evitar el reinicio no intencionado de a app
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putInt("Inn",intInn);
+        bundle.putInt("Out",intOut);
+        bundle.putInt("Dec",intDecrement);
+        bundle.putInt("Inc",intIncrement);
+        bundle.putString("Hora",strHora);
+        bundle.putString("Total",edtText.toString());
+        bundle.putBundle("Bundle",b);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle bundle) {
+        super.onRestoreInstanceState(bundle);
+        intInn = bundle.getInt("Inn");
+        intOut = bundle.getInt("Out");
+        intDecrement = bundle.getInt("Dec");
+        intIncrement = bundle.getInt("Inc");
+        strHora = bundle.getString("Hora");
+        strTotal = bundle.getString("Total");
+        b = bundle.getBundle("Bundle");
+        actualitzar();
+    }
+
+    private void actualitzar(){
         if(boolSumatori){
             txtTotal.setText(strTotal=""+(intDecrement));
         }else{
             txtTotal.setText(strTotal=""+(intIncrement));
         }
+    }
+
+    private void crono() {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(100);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                long date = System.currentTimeMillis();
+                                SimpleDateFormat format = new SimpleDateFormat("MMM dd yyyy\nhh:mm:ss.SSS a");
+                                strHora = format.format(date);
+                                txtHora.setText(strHora);
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+        t.start();
     }
 }
